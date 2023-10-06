@@ -1,6 +1,6 @@
 <?php
 // Connect to your MySQL database
-include_once 'db.php';
+include_once './database/db.php';
 
 // Retrieve data from the AJAX request
 $name = $_POST["name"];
