@@ -17,15 +17,21 @@ $stmt->bind_param("i", $authenticatedUserId);
 $stmt->execute();
 $result = $stmt->get_result();
 
-$users = array();
+$users = array(); //empty array
 while ($row = $result->fetch_assoc()) {
-   $users[] = $row;
+   $users[] = $row; //store the data in array
 }
 
 $stmt->close();
 $conn->close();
 
+// Determine the user's role (userType)
+$userType = $_SESSION['userType'];
+
 // Prepare and send the JSON response
-$response = array("data" => $users);
+$response = array("data" => $users, "userType" => $userType);
 echo json_encode($response);
+
+
+
 ?>

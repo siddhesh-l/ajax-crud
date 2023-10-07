@@ -20,6 +20,11 @@
        .navbar-right {
          float: right;
        }
+      .table-centerd-text td,
+      .table-centerd-text th {
+         vertical-align: middle;
+         text-align: center;
+      }
    </style>
 
 </head>
@@ -31,7 +36,7 @@
             <span class="navbar-toggler-icon"></span>
          </button>
          <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a class="nav-link" id="userName" href="#">Welcome User</a>
+            <a class="nav-link" id="userName" href="../profile/profile.html">Welcome User</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
                <span class="navbar-toggler-icon"></span>
             </button>
@@ -49,7 +54,7 @@
 
    <!-- Page content -->
    <div class="container mt-3">
-      <table id="userTable" class="display" style="width: 100%;">
+      <table id="userTable" class="display table-centerd-text" style="width: 100%; ">
          <thead>
             <tr>
                <th>ID</th>

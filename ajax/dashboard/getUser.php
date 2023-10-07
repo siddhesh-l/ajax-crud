@@ -8,7 +8,7 @@ if (isset($_SESSION['id'])) {
    
 
    // Replace 'users' with your actual table name and 'name_column' with the column storing user names
-   $sql = "SELECT name FROM ajax_user WHERE id = ?";
+   $sql = "SELECT name, userType FROM ajax_user WHERE id = ?";
    $stmt = $conn->prepare($sql);
    $stmt->bind_param("i", $authenticatedUserId);
    $stmt->execute();
@@ -16,7 +16,7 @@ if (isset($_SESSION['id'])) {
 
    if ($result->num_rows > 0) {
       $row = $result->fetch_assoc();
-      $response = array("name" => $row["name"]);
+      $response = array("name" => $row["name"], "userType" => $row["userType"]);
       echo json_encode($response);
    } else {
       echo json_encode(array("name" => "User"));
