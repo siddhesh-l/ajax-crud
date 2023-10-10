@@ -9,7 +9,7 @@ function redirectToUpdate(id) {
 
 // Function for deleting an item (you may define this separately)
 function deleteItem(id) {
-   alert("hi");
+   
    // Show a confirmation dialog before deleting
    var confirmation = confirm("Are you sure you want to delete this user?");
    
