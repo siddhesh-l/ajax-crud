@@ -32,6 +32,18 @@ function deleteItem(id) {
    }
 }
 
+// Function to render images with default if not available
+function renderImage(data, type, row) {
+   if (type === 'display') {
+      if (data) {
+         return '<img src="' + data + '" alt="User Image" width="25">';
+      } else {
+         return '<img src="http://localhost/siddhesh/ajax/images/default_user.png" alt="Default User Image" width="50">';
+      }
+   }
+   return data;
+}
+
 
 $.ajax({
    url: "getUser.php",
@@ -39,7 +51,8 @@ $.ajax({
    dataType: 'json',
    success: function (response) {
       var userType = response.userType;
-      console.log(userType);
+
+      var userData = response;
 
       // Update the navbar with the user's name
       $('#userName').text('Welcome ' + response.name);
@@ -52,6 +65,10 @@ $.ajax({
          },
          "columns": [
             { "data": "id" },
+            {
+               "data": "image",
+               render: renderImage
+            },
             { "data": "name" },
             { "data": "email" },
             { "data": "mobile" },
@@ -78,7 +95,7 @@ $.ajax({
       });
 
       if (userType !== 'admin') {
-         table.columns(6).visible(false);
+         table.columns(7).visible(false);
       }
 
    },

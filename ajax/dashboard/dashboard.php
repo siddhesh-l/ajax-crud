@@ -22,14 +22,13 @@ while ($row = $result->fetch_assoc()) {
    $users[] = $row; //store the data in array
 }
 
+
 $stmt->close();
 $conn->close();
 
-// Determine the user's role (userType)
-$userType = $_SESSION['userType'];
 
 // Prepare and send the JSON response
-$response = array("data" => $users, "userType" => $userType);
+$response = array("data" => $users);
 echo json_encode($response);
 
 

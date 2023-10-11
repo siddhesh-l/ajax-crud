@@ -1,41 +1,48 @@
-document.addEventListener("DOMContentLoaded", function () {
-   const loginForm = document.getElementById("loginForm");
+document.getElementById("loginForm").addEventListener("submit", function (e) {
+    e.preventDefault(); // Prevent the default form submission behavior
+    
+    // Get user inputs
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+  
+    // Create a data object to send to the server
+    var data = {
+      email: email,
+      password: password
+    };
 
-   loginForm.addEventListener("submit", function (event) {
-      event.preventDefault();
-
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      // Send a POST request to the server using fetch API
-      fetch("login.php", {
-         method: "POST",
-         headers: {
-             "Content-Type": "application/x-www-form-urlencoded",
-         },
-         body: `email=${email}&password=${password}`,
-     })
-     .then(response => {
-         if (!response.ok) {
-             throw new Error(`HTTP error! Status: ${response.status}`);
-         }
-         return response.json();
-     })
-     .then(data => {
-         if (data.success) {
-             alert("Registration Successful");
-             window.location.href = "http://localhost/siddhesh/ajax/dashboard/dashboard.html";
-         } else {
-             // Display error messages to the user
-             document.getElementById("emailError").textContent = data.email_error;
-             document.getElementById("passwordError").textContent = data.password_error;
-         }
-     })
-     .catch(error => {
-         console.error("Error:", error);
-         alert("An error occurred: " + error.message); // Show the error in an alert
-     });
-     
-   });
-
-});
+    
+  
+    // Send an AJAX request to the PHP script
+    $.ajax({
+      type: "POST",
+      url: "login.php", // Replace with the actual path to your PHP script
+      data: data,
+      dataType: "json", // Expect JSON response
+      success: function (response) {
+        // Check the response from the server
+        if (response.success) {
+          // Redirect to a success page or perform other actions
+          window.location.href = "http://localhost/siddhesh/ajax/dashboard/dashboard.html"; // Replace with the URL of your success page
+        } else {
+          // Display error messages or handle login failure
+          if (response.email_error) {
+            // Display email error message
+            $("#email-error").text(response.email_error);
+          }
+          if (response.password_error) {
+            // Display password error message
+            $("#password-error").text(response.password_error);
+          }
+          if (response.login_error) {
+            // Display login error message
+            $("#login-error").text(response.login_error);
+          }
+        }
+      },
+      error: function () {
+        // Handle AJAX error
+        alert("An error occurred while processing your request.");
+      }
+    });
+  });

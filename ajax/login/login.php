@@ -1,7 +1,7 @@
 <?php
-header("Cache-Control: no-cache, no-store, must-revalidate");
-header("Pragma: no-cache");
-header("Expires: 0");
+// header("Cache-Control: no-cache, no-store, must-revalidate");
+// header("Pragma: no-cache");
+// header("Expires: 0");
 
 error_reporting(E_ERROR | E_WARNING);
 session_start();
@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    if (empty($email_error) && empty($password_error)) {
       $hashed_password = hash('sha256', $password);
       
-      $sql = "SELECT id, name, email, mobile, gender, userType FROM ajax_user WHERE email = ? AND password = ?";
+      $sql = "SELECT id, image, name, email, mobile, gender, userType FROM ajax_user WHERE email = ? AND password = ?";
       $stmt = $conn->prepare($sql);
       $stmt->bind_param("ss", $email, $hashed_password);
       $stmt->execute();
@@ -30,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       if ($result->num_rows == 1) {
          $row = $result->fetch_assoc();
          $_SESSION['id'] = $row['id'];
+         $_SESSION['image'] = $row['image'];
          $_SESSION['name'] = $row['name'];
          $_SESSION['email'] = $row['email'];
          $_SESSION['mobile'] = $row['mobile'];

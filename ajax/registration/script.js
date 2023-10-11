@@ -7,8 +7,17 @@ $("#submit").click(function () {
     var email = $("#floatingEmail").val();
     var password = $("#password").val();
     var mobile = $("#floatingPhone").val();
-    var gender = $("#gender").val();
+    var gender = $('input[name="gender"]:checked').val();
     var userType = $('input[name="userType"]:checked').val();
+
+    // alert(name);
+    // alert(email);
+    // alert(password);
+    // alert(mobile);
+    // alert(gender);
+    // alert(userType);
+    
+
 
     // Validate form inputs
     var isValid = true;
@@ -59,6 +68,7 @@ $("#submit").click(function () {
             },
             success: function (response) {
                 $("#message").html(response);
+                alert(response);
                 window.location.href = "http://localhost/siddhesh/ajax/login/login.html";
             }
         });
