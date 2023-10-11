@@ -52,8 +52,6 @@ $.ajax({
    success: function (response) {
       var userType = response.userType;
 
-      var userData = response;
-
       // Update the navbar with the user's name
       $('#userName').text('Welcome ' + response.name);
 

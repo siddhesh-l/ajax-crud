@@ -1,6 +1,6 @@
 $('#infoForm').submit(function (e) {
    e.preventDefault();
-   
+
    // Serialize form data
    var formData = $(this).serialize();
 
@@ -28,5 +28,43 @@ $('#infoForm').submit(function (e) {
          // Show an error message
          $('#updateMessage').text('Failed to update user data').show();
       }
+   });
+});
+
+// Function to handle the file input change event
+function handleFileInputChange() {
+   var fileInput = document.getElementById('newProfileImage');
+   previewImage(fileInput);
+}
+
+// Function to handle the update button click
+document.getElementById('updateImage').addEventListener('click', function () {
+   var fileInput = document.getElementById('newProfileImage');
+   if (fileInput.files.length === 0) {
+       alert('Please select an image to upload.');
+       return;
+   }
+   var formData = new FormData(document.getElementById('imageUploadForm'));
+   
+   fetch('update_profile_image.php', {
+       method: 'POST',
+       body: formData
+   })
+   .then(response => response.json())
+   .then(data => {
+       if (data.success) {
+           // Update the UI or display a success message
+           alert('Profile image updated successfully.');
+           // Optionally, update the user interface with the new image
+           var profileImage = document.getElementById('profileImage');
+           profileImage.style.backgroundImage = 'url(' + data.newImage + ')';
+           profileImage.style.backgroundSize = 'cover';
+       } else {
+           // Handle the error and display an error message
+           alert('Error updating profile image: ' + data.error);
+       }
+   })
+   .catch(error => {
+       console.error('Error:', error);
    });
 });

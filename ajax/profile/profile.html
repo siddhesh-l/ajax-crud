@@ -55,36 +55,29 @@
    <div class="container pt-5">
       <div class="row justify-content-center">
 
-         <!-- Check for error message and display it -->
-         
-            
-           
-         
-
          <!-- Profile Picture Card -->
          <div class="col-md-3">
             <div class="card align-items-center" style="height: 515px;"><br><br>
-
+               <!-- <img id="profileImage" src="" alt="Profile Picture" class="centered-image" style="height: 150px; width: 150px; align-items: center;"> -->
+               <div id="profileImage"></div>
                <p>
                <h6>JPG or PNG no larger than 5 MB</h6>
                </p><br>
                <div class="card-body text-center">
-                  <form method="post" action="update_profile_image.php" enctype="multipart/form-data">
-                     <!-- Other form inputs -->
-                     <!-- Add the provided form code here -->
+                  <form enctype="multipart/form-data" id="imageUploadForm">
                      <div class="input-group input-group-lg mb-3">
                         <span class="input-group-text" id="basic-addon1">
                            <i class="bi bi-image"></i>
                         </span>
-                        <input type="file" class="form-control" name="new_profile_image" accept="image/*">
+                        <input type="file" class="form-control" name="new_profile_image" id="newProfileImage" accept="image/*">
                      </div>
                      <!-- Update and Cancel buttons -->
                      <div class="row">
                         <div class="col-md-6">
-                           <button type="Update" class="btn btn-outline-primary w-100" value="submit">Update</button>
+                           <button type="Update" class="btn btn-outline-primary w-100" id="updateImage">Update</button>
                         </div>
                         <div class="col-md-6">
-                           <a href="profilepage.php"><button type="Update" class="btn btn-outline-danger w-100">Cancel</button></a>
+                           <a href="profile.html"><button type="cancel" class="btn btn-outline-danger w-100">Cancel</button></a>
                         </div>
                      </div>
                   </form>
@@ -97,7 +90,7 @@
             <div class="card p-5">
                <div class="card-body">
                   <h3 class="card-title text-center">Personal Information</h3><br>
-                  <form method="post" action="profile_info.php" id="infoForm">
+                  <form id="infoForm">
                      <div class="input-group">
                         <div class="input-group-prepend">
 
@@ -139,9 +132,9 @@
 
                      </div>
                   </form>
-                  <div id="updateMessage" style="display: none; color: green;"></div>
                </div>
             </div>
+            <div id="updateMessage" style="display: none; color: green;"></div>
          </div>
       </div>
    </div>

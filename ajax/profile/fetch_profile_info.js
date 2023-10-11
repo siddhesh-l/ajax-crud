@@ -13,6 +13,15 @@ $.ajax({
          } else if (userData.gender === 'female') {
             $('#female').prop('checked', true);
          }
+
+         // Check if profile_image field is available in the response (not userImage)
+         if (userData.profile_image) {
+
+            var userImage = '<img src="http://localhost/siddhesh/ajax/images/'+ userData.profile_image +'"/>'
+
+            // Append the image element to a container or a specific location in your HTML
+            $('#profileImage').html(userImage); 
+         }
       } else {
          console.error('Error fetching user data: ' + response.message);
       }
@@ -21,4 +30,3 @@ $.ajax({
       console.error('Failed to fetch user data');
    }
 });
-

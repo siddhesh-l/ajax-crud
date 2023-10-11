@@ -10,18 +10,19 @@ if (!isset($_SESSION['id'])) {
 if ($_SERVER['REQUEST_METHOD'] == "GET") { // Use GET request to fetch user data
    $user_id = $_SESSION['id'];
 
-   $select_sql = "SELECT name, mobile, gender FROM ajax_user WHERE id = ?";
+   $select_sql = "SELECT name, mobile, gender, image FROM ajax_user WHERE id = ?";
    $stmt = mysqli_prepare($conn, $select_sql);
    mysqli_stmt_bind_param($stmt, "i", $user_id);
 
    if (mysqli_stmt_execute($stmt)) {
-      mysqli_stmt_bind_result($stmt, $name, $mobile, $gender);
+      mysqli_stmt_bind_result($stmt, $name, $mobile, $gender, $profile_image);
       mysqli_stmt_fetch($stmt);
 
       $user_data = array(
          'name' => $name,
          'mobile' => $mobile,
-         'gender' => $gender
+         'gender' => $gender,
+         'profile_image' => $profile_image // Include the image information
       );
 
       $response = array('success' => true, 'user_data' => $user_data);
