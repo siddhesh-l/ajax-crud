@@ -1,37 +1,56 @@
 <?php
-require_once '../database/db.php'; // Include your database connection script
+error_reporting(0);
+
+require_once '../database/db.php';
 session_start();
 
 if (!isset($_SESSION['id'])) {
-   header("location: http://localhost/siddhesh/ajax/login/login.html");
-   exit;
+    header("location: http://localhost/siddhesh/php2/login.php");
+    exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-   $user_id = $_SESSION['id'];
-   $new_username = $_POST['new_username'];
-   $new_phone = $_POST['new_phone'];
-   $new_gender = $_POST['new_gender'];
+$user_id = $_SESSION['id'];
 
-   $update_sql = "UPDATE ajax_user SET name = ?, mobile = ?, gender = ? WHERE id = ?";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $new_username = mysqli_real_escape_string($conn, $_POST['new_username']);
+    $new_phone = mysqli_real_escape_string($conn, $_POST['new_phone']);
+    $new_gender = mysqli_real_escape_string($conn, $_POST['new_gender']);
+    
+    // Handle profile image upload
+    if (!empty($_FILES['new_profile_image']['name'])) {
+        $target_dir = "images/";
+        $target_file = $target_dir . basename($_FILES['new_profile_image']['name']);
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        
+        $allowed_extensions = array("jpg", "png", "jpeg");
 
-   $stmt = mysqli_prepare($conn, $update_sql);
-   mysqli_stmt_bind_param($stmt, "sssi", $new_username, $new_phone, $new_gender, $user_id);
+        if (in_array($imageFileType, $allowed_extensions)) {
+            if (move_uploaded_file($_FILES['new_profile_image']['tmp_name'], $target_file)) {
+                $new_image = mysqli_real_escape_string($conn, $target_file);
+            } else {
+                echo "Error uploading the image.";
+            }
+        } else {
+            echo "Invalid file format. Allowed formats: JPG, PNG, JPEG";
+        }
+    } else {
+        $new_image = $current_user_image; // Use the existing image if no new image is uploaded
+    }
 
-   if (mysqli_stmt_execute($stmt)) {
-      $_SESSION['name'] = $new_username;
-      $_SESSION['mobile'] = $new_phone;
-      $_SESSION['gender'] = $new_gender;
-      $response = array('success' => true);
-   } else {
-      $response = array('success' => false, 'message' => 'Error updating personal information: ' . mysqli_error($conn));
-   }
+    // Update user information including the profile image
+    $update_sql = "UPDATE ajax_user SET name = '$new_username', mobile = '$new_phone', gender = '$new_gender', image = '$new_image' WHERE id = $user_id";
 
-   mysqli_stmt_close($stmt);
-   echo json_encode($response);
-} else {
-   echo json_encode(array('success' => false, 'message' => 'Invalid request'));
+    if (mysqli_query($conn, $update_sql)) {
+        $_SESSION['name'] = $new_username;
+        $_SESSION['phone'] = $new_phone;
+        $_SESSION['gender'] = $new_gender;
+        $_SESSION['user_image'] = $new_image;
+
+        echo "Update data successfully";
+    } else {
+        echo "Error: " . mysqli_error($conn);
+    }
 }
 
-mysqli_close($conn);
+session_write_close();
 ?>

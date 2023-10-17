@@ -1,70 +1,63 @@
-$('#infoForm').submit(function (e) {
-   e.preventDefault();
 
-   // Serialize form data
-   var formData = $(this).serialize();
+// Fetch user data and populate the form
+$.ajax({
+    url: 'fetch_profile_info.php',
+    type: 'GET',
+    dataType: 'json',
+    success: function (response) {
+        if (response.success) {
+            var personalInfo = response.personal_info;
 
-   // Send AJAX request to update user data
-   $.ajax({
-      url: 'profile_info.php', // PHP script to update user data
-      method: 'POST',
-      data: formData,
-      dataType: 'json',
-      success: function (response) {
-         if (response.success) {
-            // Show the update message
-            $('#updateMessage').text('User data updated successfully!').show();
+            // Populate the form fields with personal information
+            $('#name').val(personalInfo.name);
+            $('#mobile').val(personalInfo.mobile);
 
-            // You can also hide the message after a certain time
-            setTimeout(function () {
-               $('#updateMessage').fadeOut('slow');
-            }, 3000); // Hide after 3 seconds (adjust as needed)
-         } else {
-            // Show an error message
-            $('#updateMessage').text('Error updating user data: ' + response.message).show();
-         }
-      },
-      error: function () {
-         // Show an error message
-         $('#updateMessage').text('Failed to update user data').show();
-      }
-   });
+            // Check the appropriate radio button based on the user's gender
+            $("input[name='gender'][value='" + personalInfo.gender + "']").prop('checked', true);
+        } else {
+            alert('Failed to fetch personal information.');
+        }
+    }
 });
 
-// Function to handle the file input change event
-function handleFileInputChange() {
-   var fileInput = document.getElementById('newProfileImage');
-   previewImage(fileInput);
-}
+// Handle personal information form submission
+$('#infoForm').on('submit', function (e) {
+    e.preventDefault();
+    var formData = new FormData(this);
 
-// Function to handle the update button click
-document.getElementById('updateImage').addEventListener('click', function () {
-   var fileInput = document.getElementById('newProfileImage');
-   if (fileInput.files.length === 0) {
-       alert('Please select an image to upload.');
-       return;
-   }
-   var formData = new FormData(document.getElementById('imageUploadForm'));
-   
-   fetch('update_profile_image.php', {
-       method: 'POST',
-       body: formData
-   })
-   .then(response => response.json())
-   .then(data => {
-       if (data.success) {
-           // Update the UI or display a success message
-           alert('Profile image updated successfully.');
-           // Optionally, update the user interface with the new image
-           var profileImage = document.getElementById('profileImage');
-           profileImage.style.backgroundImage = 'url(' + data.newImage + ')';
-           profileImage.style.backgroundSize = 'cover';
-       } else {
-           // Handle the error and display an error message
-           alert('Error updating profile image: ' + data.error);
-       }
-   })
-   .catch(error => {
-       console.error('Error:', error);
-   });
+    $.ajax({
+        url: 'update_profile.php',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response.success) {
+                $('#updateMessage').show().text('Failed to update personal information: ' + response.message).css('color', 'red');
+            } else {
+                $('#updateMessage').show().text('Personal information updated successfully.').css('color', 'green');
+            }
+        }
+    });
+});
+
+// Handle image upload
+$('#updateImage').on('click', function (e) {
+    e.preventDefault();
+    var formData = new FormData($('#imageUploadForm')[0]);
+
+    $.ajax({
+        url: 'update_profile.php',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response.success) {
+                alert('Profile image updated successfully.');
+            } else {
+                alert('Failed to update profile image: ' + response.message);
+            }
+        }
+    });
 });

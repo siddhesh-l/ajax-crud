@@ -38,7 +38,7 @@ function renderImage(data, type, row) {
       if (data) {
          return '<img src="' + data + '" alt="User Image" width="25">';
       } else {
-         return '<img src="http://localhost/siddhesh/ajax/images/default_user.png" alt="Default User Image" width="50">';
+         return '<img src="http://localhost/siddhesh/ajax/images/default_user.png" alt="Default User Image" width="25">';
       }
    }
    return data;

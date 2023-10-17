@@ -1,32 +1,45 @@
-$.ajax({
-   url: 'fetch_profile_info.php', // PHP script to fetch user data
-   method: 'GET',
-   dataType: 'json',
-   success: function (response) {
-      if (response.success) {
-         var userData = response.user_data;
-         $('#new_username').val(userData.name);
-         $('#new_phone').val(userData.mobile);
+$(document).ready(function () {
+    // Fetch user data and populate the form
+    $.ajax({
+        url: 'fetch_profile_info.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            if (response.success) {
+                var userData = response.user_data;
 
-         if (userData.gender === 'male') {
-            $('#male').prop('checked', true);
-         } else if (userData.gender === 'female') {
-            $('#female').prop('checked', true);
-         }
+                // Populate the form fields with user data
+                $('#name').val(userData.name);
+                $('#mobile').val(userData.mobile);
+                $("input[name='gender'][value='" + userData.gender + "']").prop('checked', true);
 
-         // Check if profile_image field is available in the response (not userImage)
-         if (userData.profile_image) {
+                if (userData.image) {
+                    $('#previewImage').attr('src', userData.image);
+                }
+            } else {
+                alert('Failed to fetch user data.');
+            }
+        }
+    });
 
-            var userImage = '<img src="http://localhost/siddhesh/ajax/images/'+ userData.profile_image +'"/>'
+    // Handle form submission
+    $('#updateProfileForm').on('submit', function (e) {
+        e.preventDefault();
+        var formData = new FormData(this);
 
-            // Append the image element to a container or a specific location in your HTML
-            $('#profileImage').html(userImage); 
-         }
-      } else {
-         console.error('Error fetching user data: ' + response.message);
-      }
-   },
-   error: function () {
-      console.error('Failed to fetch user data');
-   }
+        $.ajax({
+            url: 'update_profile.php',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.success) {
+                    alert('Profile updated successfully.');
+                } else {
+                    alert('Failed to update profile: ' + response.message);
+                }
+            }
+        });
+    });
 });

@@ -1,5 +1,6 @@
 <?php
-require_once '../database/db.php'; // Include your database connection script
+include '../database/db.php'; // Include your database connection script
+// ob_start();
 session_start();
 
 if (!isset($_SESSION['id'])) {
@@ -15,17 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") { // Use GET request to fetch user data
    mysqli_stmt_bind_param($stmt, "i", $user_id);
 
    if (mysqli_stmt_execute($stmt)) {
-      mysqli_stmt_bind_result($stmt, $name, $mobile, $gender, $profile_image);
-      mysqli_stmt_fetch($stmt);
-
-      $user_data = array(
-         'name' => $name,
-         'mobile' => $mobile,
-         'gender' => $gender,
-         'profile_image' => $profile_image // Include the image information
-      );
+      $result = mysqli_stmt_get_result($stmt);
+      $user_data = mysqli_fetch_assoc($result);
 
       $response = array('success' => true, 'user_data' => $user_data);
+     
    } else {
       $response = array('success' => false, 'message' => 'Error fetching user data: ' . mysqli_error($conn));
    }
@@ -37,4 +32,5 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") { // Use GET request to fetch user data
 }
 
 mysqli_close($conn);
+// ob_end_flush();
 ?>
